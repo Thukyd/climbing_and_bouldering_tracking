@@ -57,33 +57,43 @@ class Entries():
             json_file.append(user)
             file.seek(0)
             json.dump(json_file, file)
+
+    def search_user(self, user_id, data):
+        return [element for element in data if element['id'] == user_id]
     
     def add_entry(self, data):
-        # user 
+
         user = data[0]
-        
-        # check if user exists
-        
-
-        # add current record entry
-        #user["records"] = []
-        #user["records"].append(data[1])
-
-        
-        print(user["id"])
+        #record = data[1]
 
         with open(self.path, "r+") as file:
             json_file = json.load(file)
             
-            if not any(d.get('id', None) == user["id"] for d in json_file):
-                
-                print("It does not exist")
-            else:
-                
-                print("Already there, buddy")
+ 
 
-            #json_file.append(user)
-            #file.seek(0)
+            # search for user
+            element = self.search_user(user["id"], json_file)
+
+            print(element)
+   
+           
+            # element = 1
+            # # add new user
+            # if element == []:
+            #     user_id = user["id"]
+            #     user["records"] = []
+            #     #json_file.append(user)
+            #     print(f"\nadd new user for {user_id}x")
+            #add new record entry
+            # else: 
+            #     user_id = user["id"]
+            #     print(f"\nadd new entry for {user_id}")
+            #     element[0]["records"].append(record)
+
+
+
+            # json_file.append(user)
+            file.seek(0)
             #json.dump(json_file, file)
 
 
@@ -96,6 +106,6 @@ class Entries():
 
 Entries().add_entry([test_user_a, test_record_a])
 Entries().add_entry([test_user_b, test_record_a])
-Entries().add_entry([test_user_a, test_record_a])
-Entries().add_entry([test_user_b, test_record_a])
-Entries().add_entry([test_user_b, test_record_a])
+# Entries().add_entry([test_user_a, test_record_b])
+# Entries().add_entry([test_user_b, test_record_b])
+# Entries().add_entry([test_user_b, test_record_a])

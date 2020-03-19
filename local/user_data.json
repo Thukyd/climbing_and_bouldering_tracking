@@ -9,6 +9,13 @@
         "id": "987654321",
         "surname": "Doe",
         "forename": "Jane",
-        "records": []
+        "records": [
+            {
+                "timetamp": 1584640043.711526,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            }
+        ]
     }
 ]
