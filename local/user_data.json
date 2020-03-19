@@ -15,6 +15,91 @@
                 "grade": "5+",
                 "completion_type": "on-sight",
                 "scale": 0
+            },
+            {
+                "timetamp": 1584648214.933154,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648301.047666,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648452.357767,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648466.275974,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648471.898231,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648560.515063,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648560.515063,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648560.515063,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            }
+        ]
+    },
+    {
+        "id": "123456789",
+        "surname": "Mustermann",
+        "forename": "Max",
+        "records": [
+            {
+                "timetamp": 1584648104.373163,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648466.275974,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648471.898231,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648560.515063,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
+            },
+            {
+                "timetamp": 1584648560.515063,
+                "grade": "5+",
+                "completion_type": "on-sight",
+                "scale": 0
             }
         ]
     }
