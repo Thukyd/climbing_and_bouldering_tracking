@@ -12,6 +12,34 @@
 # b) former days results
 
 
+# self.grade_mapping = {
+#             "name" : ["fb-bloc", "fb-trav", "v-scale"],
+#             "grade": {
+#                 0:  ["4", "4", "V0"],
+#                 1:  ["5"],
+#                 2:  ["5+"],
+#                 3:  ["6a"],
+#                 4:  ["6a+"],
+#                 5:  ["6b"],
+#                 6:  ["6b+"],
+#                 7:  ["6c"],
+#                 8:  ["6c+"],
+#                 9:  ["7a"],
+#                 10: ["7a+"],
+#                 11: ["7b"],
+#                 12: ["7b+"],
+#                 13: ["7c"],
+#                 14: ["7c+"],
+#                 15: ["8a"],
+#                 16: ["8a+"],
+#                 17: ["8b"],
+#                 18: ["8b+"],
+#                 19: ["8c"],
+#                 20: ["8c+"],
+#                 21: ["9a"]
+#             }
+
+
 ##############################
 
 import datetime
@@ -24,32 +52,33 @@ class Grades():
             # https://www.bergzeit.de/magazin/bouldern-schwierigkeitsgrade-tabelle-umrechnung/
         self.grade_mapping = {
             "name" : ["fb-bloc", "fb-trav", "v-scale"],
-            "grade": {
-                0:  ["4", "4", "V0"],
-                1:  ["5"],
-                2:  ["5+"],
-                3:  ["6a"],
-                4:  ["6a+"],
-                5:  ["6b"],
-                6:  ["6b+"],
-                7:  ["6c"],
-                8:  ["6c+"],
-                9:  ["7a"],
-                10: ["7a+"],
-                11: ["7b"],
-                12: ["7b+"],
-                13: ["7c"],
-                14: ["7c+"],
-                15: ["8a"],
-                16: ["8a+"],
-                17: ["8b"],
-                18: ["8b+"],
-                19: ["8c"],
-                20: ["8c+"],
-                21: ["9a"]
-            }
+            "grade": [
+                ("4", "4", "V0"),
+                ("5"),
+                ("5+"),
+                ("6a"),
+                ("6a+"),
+                ("6b"),
+                ("6b+"),
+                ("6c"),
+                ("6c+"),
+                ("7a"),
+                ("7a+"),
+                ("7b"),
+                ("7b+"),
+                ("7c"),
+                ("7c+"),
+                ("8a"),
+                ("8a+"),
+                ("8b"),
+                ("8b+"),
+                ("8c"),
+                ("8c+"),
+                ("9a")
+
+            ]
         }
-        self.standard_grade = 0 # sets standard to "fb-bloc"
+        self.standard_grade = 00 # sets standard to "fb-bloc"
 
     def get_standard(self):
         return self.standard_grade
@@ -69,7 +98,8 @@ class Grades():
 ############# TEST
 print()
 print(f"My standard scale is {Grades().print_standard()}.") # returns "fb-bloc" 
-print(f"The current grade is {Grades().set_route_grade(2)}") # returns "5+"
+print(f"The current grade is {Grades().set_route_grade(0)}") # returns "5+"
+
 
 class CompletionType():
     def __init__(self):
@@ -104,18 +134,38 @@ class CreateEntry():
         # print out inputs
         print_out = self.add_entry(input_grade, input_type)
         print()
-        print(f"I added '{print_out[1]}' with the grade '{print_out[0]}'.")
-        timestamp = print_out[2]
-        print(f"    {time.ctime(timestamp)}")
+        print(f"I added '{print_out[3]}' with the grade '{print_out[2]}'.")
+        print(f"    Scale:  {Grades().print_standard()}")
+        timestamp = print_out[0]
+        print(f"    Date:   {time.ctime(timestamp)}")
         print()
 
+    def formt_json(self, data):
+        # information about user: currently static => TODO
+        user = {
+            "id" : "123456789",
+            "surname" : "Mustermann",
+            "forename" : "Max"
+        }
+        ## entry information
+        record = {
+            "timetamp" : data[0],
+            "scale" : data[1],
+            "grade" : data[2],
+            "completion_type" : data[3],
+            
+        }
+
+        return [user, record]
+
     def add_entry(self, input_grade, input_type):
-        entry_grade = Grades().set_route_grade(input_grade)
-        entry_type = CompletionType().set_completion_type(input_type)
+        grade = Grades().set_route_grade(input_grade)
+        completion_type = CompletionType().set_completion_type(input_type)
         timestamp = datetime.datetime.now().timestamp()
-        return [entry_grade, entry_type, timestamp]
+        scale = Grades().get_standard()
+        return [timestamp, scale, grade, completion_type]
+
+
 
 ############# TEST 
 CreateEntry().ask_console()
-
-
