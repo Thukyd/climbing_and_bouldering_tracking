@@ -1,0 +1,14 @@
+[
+    {
+        "id": "12",
+        "surname": "Mustermann",
+        "forename": "Max",
+        "records": []
+    },
+    {
+        "id": "987654321",
+        "surname": "Doe",
+        "forename": "Jane",
+        "records": []
+    }
+]
