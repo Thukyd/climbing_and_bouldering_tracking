@@ -1,2 +1,4 @@
 .vscode/launch.json
 mongo/connection_instruction.txt
+mongo/credentials.json
+mongo/credentials_example.json
