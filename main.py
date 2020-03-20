@@ -59,19 +59,26 @@ from pymongo import MongoClient
 # TODO: https://account.mongodb.com/account/login
 class Mongo():
     def __init__(self):
-        self.credentials = self.receive_credentials()
-        self.cluster = MongoClient(self.credentials)
-        self.db = 
+        self.collection = self.config()
 
-    def receive_credentials(self):
-        try: 
-            with open("./mongo/credentials.json") as file:
-                parsed = json.load(file)
-                credentials = parsed["connection"]
-            return credentials
-        except:
-            logging.error("Could not get MongoDB credentials - Please check the mongo folder")
+    def config(self):
+        with open("./mongo/configurations.json") as file:
+            parsed = json.load(file)
+            # config params
+            param_connection = parsed["connection"]
+            param_db_name = parsed["db_name"]
+            param_collection = parsed["collection"]
+            # set up connection
+            cluster = MongoClient(param_connection)
+            db = cluster[param_db_name]
+            collection = db[param_collection]
+        return collection
 
+    def insert(self):
+        # TODO: weiter ausbauen
+        self.collection.insert_one(
+            {"hallo":"Ballo3"}
+        )
 
 # convert boulder grade
 class Grades():

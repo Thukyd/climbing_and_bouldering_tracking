@@ -55,7 +55,9 @@ import local_record
 
 import main
 
-print(main.Mongo().receive_credentials())
+main.Mongo()
+
+main.Mongo().insert()
 
 
 
