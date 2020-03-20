@@ -8,11 +8,10 @@ class Entries():
         self.startupCheck()
 
     def startupCheck(self):
+        # check if file exists
         if os.access(self.path, os.R_OK):
-            # checks if file exists
             logging.info("  startupCheck: File exists")
         else:
-            # check if 
             #TODO: create a new document
             with open(self.path, "w") as file:
                 structure = []

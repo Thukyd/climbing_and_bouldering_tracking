@@ -41,3 +41,12 @@ local_record.Entries().add_entry([test_user_b, test_record_b])
 local_record.Entries().add_entry([test_user_b, test_record_a])
 local_record.Entries().add_entry([test_user_c, test_record_a]) #NEW USER WITH RECORD
 ############### TEST LOCAL RECORD ##############
+
+
+############## TEST Console Input
+import main
+
+main.CreateEntry().
+
+
+# main.CreateEntry().ask_console()

@@ -45,9 +45,15 @@
 import datetime
 import time
 
+# module to save entries locally
 import local_record
 
-local_record.Entries()
+
+# TODO: https://www.youtube.com/watch?v=rE_bJl2GAY8
+# TODO: https://account.mongodb.com/account/login
+class Mongo():
+    pass
+
 
 # convert boulder grade
 class Grades():
@@ -206,7 +212,7 @@ class CreateEntry():
     def __init__(self):
         pass
     
-    def ask_console(self):
+    def console_input(self):
         print("##################################\n")
         print("Allright, i need some information\n")
         print("Please tell the grade:\n") 
@@ -238,8 +244,7 @@ class CreateEntry():
             "timetamp" : data[0],
             "scale" : data[1],
             "grade" : data[2],
-            "completion_type" : data[3],
-            
+            "completion_type" : data[3],   
         }
 
         return [user, record]
@@ -257,8 +262,3 @@ class CreateEntry():
         # add to local record
         local_record.Entries().add_entry(data)
         return record
-
-
-
-############# TEST 
-CreateEntry().ask_console()
