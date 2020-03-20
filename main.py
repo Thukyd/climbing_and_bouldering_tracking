@@ -44,16 +44,33 @@
 
 import datetime
 import time
+import logging
 
 # module to save entries locally
 import local_record
+
+######### MongoDB
+import json
+import pymongo
+from pymongo import MongoClient
 
 
 # TODO: https://www.youtube.com/watch?v=rE_bJl2GAY8
 # TODO: https://account.mongodb.com/account/login
 class Mongo():
-    
-    pass
+    def __init__(self):
+        self.credentials = self.receive_credentials()
+        self.cluster = MongoClient(self.credentials)
+        self.db = 
+
+    def receive_credentials(self):
+        try: 
+            with open("./mongo/credentials.json") as file:
+                parsed = json.load(file)
+                credentials = parsed["connection"]
+            return credentials
+        except:
+            logging.error("Could not get MongoDB credentials - Please check the mongo folder")
 
 
 # convert boulder grade

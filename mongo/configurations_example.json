@@ -1,0 +1,5 @@
+{
+    "connection": "mongodb+srv://<user>:<password>@cluster<...>.gcp.mongodb.net/test?retryWrites=true&w=majority",
+    "db_name": "<db_name>"
+
+}
