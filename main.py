@@ -45,6 +45,10 @@
 import datetime
 import time
 
+import local_record
+
+local_record.Entries()
+
 # convert boulder grade
 class Grades():
     def __init__(self):
@@ -53,29 +57,116 @@ class Grades():
         self.grade_mapping = {
             "name" : ["fb-bloc", "fb-trav", "v-scale"],
             "grade": [
-                ("4", "4", "V0"),
-                ("5"),
-                ("5+"),
-                ("6a"),
-                ("6a+"),
-                ("6b"),
-                ("6b+"),
-                ("6c"),
-                ("6c+"),
-                ("7a"),
-                ("7a+"),
-                ("7b"),
-                ("7b+"),
-                ("7c"),
-                ("7c+"),
-                ("8a"),
-                ("8a+"),
-                ("8b"),
-                ("8b+"),
-                ("8c"),
-                ("8c+"),
-                ("9a")
-
+                [
+                    "4",
+                    "4",
+                    "V0"
+                ],
+                [
+                    "5",
+                    "5",
+                    "V1"
+                ],
+                [
+                    "5+",
+                    "6a",
+                    "V2"
+                ],
+                [
+                    "6a",
+                    "6a+",
+                    "V3"
+                ],
+                [
+                    "6a+",
+                    "6b",
+                    "V4"
+                ],
+                [
+                    "6b",
+                    "6b+",
+                    "V4"
+                ],
+                [
+                    "6b+",
+                    "6c",
+                    "V5"
+                ],
+                [
+                    "6c",
+                    "6c+",
+                    "V5"
+                ],
+                [
+                    "6c+",
+                    "7a",
+                    "V6"
+                ],
+                [
+                    "7a",
+                    "7a+",
+                    "V6"
+                ],
+                [
+                    "7a+",
+                    "7b",
+                    "V7"
+                ],
+                [
+                    "7b",
+                    "7b+",
+                    "V8"
+                ],
+                [
+                    "7b+",
+                    "7c",
+                    "V9"
+                ],
+                [
+                    "7c",
+                    "7c+",
+                    "V9"
+                ],
+                [
+                    "7c+",
+                    "8a",
+                    "V10"
+                ],
+                [
+                    "8a",
+                    "8a+",
+                    "V11"
+                ],
+                [
+                    "8a+",
+                    "8b",
+                    "V12"
+                ],
+                [
+                    "8b",
+                    "8b+",
+                    "V13"
+                ],
+                [
+                    "8b+",
+                    "8c",
+                    "V14"
+                ],
+                [
+                    "8c",
+                    "8c+",
+                    "V15"
+                ],
+                [
+                    "8c+",
+                    "9a",
+                    "V16"
+                ],
+                [
+                    "9a",
+                    "> 9a",
+                    "V17"
+                ]
             ]
         }
         self.standard_grade = 00 # sets standard to "fb-bloc"
@@ -95,10 +186,6 @@ class Grades():
         current_grade = self.grade_mapping["grade"][index][scale]
         return current_grade
 
-############# TEST
-print()
-print(f"My standard scale is {Grades().print_standard()}.") # returns "fb-bloc" 
-print(f"The current grade is {Grades().set_route_grade(0)}") # returns "5+"
 
 
 class CompletionType():
@@ -113,8 +200,7 @@ class CompletionType():
     def set_completion_type(self, index):
         return self.type[index]
 
-############# TEST
-print(f"The completion typ is {CompletionType().set_completion_type(0)}") # returns flash
+
 
 class CreateEntry():
     def __init__(self):
@@ -140,12 +226,12 @@ class CreateEntry():
         print(f"    Date:   {time.ctime(timestamp)}")
         print()
 
-    def formt_json(self, data):
+    def form_entry(self, data):
         # information about user: currently static => TODO
         user = {
-            "id" : "123456789",
-            "surname" : "Mustermann",
-            "forename" : "Max"
+            "id" : "14785239",
+            "surname" : "Bruchhagen",
+            "forename" : "Heribert"
         }
         ## entry information
         record = {
@@ -163,7 +249,14 @@ class CreateEntry():
         completion_type = CompletionType().set_completion_type(input_type)
         timestamp = datetime.datetime.now().timestamp()
         scale = Grades().get_standard()
-        return [timestamp, scale, grade, completion_type]
+        
+        record = [timestamp, scale, grade, completion_type]
+
+        data = self.form_entry(record)
+
+        # add to local record
+        local_record.Entries().add_entry(data)
+        return record
 
 
 

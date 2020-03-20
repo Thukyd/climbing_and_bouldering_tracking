@@ -1,8 +1,23 @@
 import json
+import os
+import logging
 
 class Entries():
     def __init__(self):
         self.path = "./local/user_data.json"
+        self.startupCheck()
+
+    def startupCheck(self):
+        if os.access(self.path, os.R_OK):
+            # checks if file exists
+            logging.info("  startupCheck: File exists")
+        else:
+            # check if 
+            #TODO: create a new document
+            with open(self.path, "w") as file:
+                structure = []
+                json.dump(structure, file)
+            logging.warning("   startupCheck: user_data.json was created")
 
     def search_user(self, user_id, data):
         # returns matching dictionary
@@ -22,55 +37,15 @@ class Entries():
 
             # add new user
             if element == []:
-                # add empty list of records
-                user["records"] = []
-                # add new user with new record
+                # add record to user element
+                user["records"] = [record]
+                # add new user
                 json_file.append(user)
             # add new record entry 
             else: 
-                user_id = user["id"]
                 element[0]["records"].append(record)
 
             file.truncate()
             json.dump(json_file, file)
+            print(" Info: New entry was added to user_data.json")
 
-
-# TODO: Create a module!!!
-
-
-
-
-
-################ TEST
-# import datetime
-
-# test_user_a = {
-#     "id" : "123456789",
-#     "surname" : "Mustermann",
-#     "forename" : "Max"
-# }
-# test_user_b = {
-#     "id" : "987654321",
-#     "surname" : "Doe",
-#     "forename" : "Jane"
-# }
-# ## entry information
-# test_record_a = {
-#     "timetamp" : datetime.datetime.now().timestamp(),
-#     "grade" : "5+",
-#     "completion_type" : "on-sight",
-#     "scale" : 0
-# }
-
-# test_record_b = {
-#     "timetamp" : datetime.datetime.now().timestamp(),
-#     "grade" : "5+",
-#     "completion_type" : "on-sight",
-#     "scale" : 0
-# }
-#
-# Entries().add_entry([test_user_a, test_record_a]) #NEW USER
-# Entries().add_entry([test_user_b, test_record_a]) #ADD RECORD
-# Entries().add_entry([test_user_a, test_record_b])
-# Entries().add_entry([test_user_b, test_record_b])
-# Entries().add_entry([test_user_b, test_record_a])
