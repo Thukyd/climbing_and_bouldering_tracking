@@ -4,7 +4,7 @@ V.01: keep track of your bouldered routes
 
 ### Tasks:
 - [x] grade & completion type mappings
-- [x] local save folder
+- [x] local storage
 - [x] connection to mongo
 - [ ] option a: input via console with local storage
 - [ ] option b: input via script with local storage
