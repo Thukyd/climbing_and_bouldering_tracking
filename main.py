@@ -32,7 +32,7 @@ import logging
 # TODO: https://www.youtube.com/watch?v=rE_bJl2GAY8
 # TODO: https://account.mongodb.com/account/login
 ###     Connection to MongoDB
-class MongoDb():
+class OptionMongoDb():
     def __init__(self):
         self.collection = self.config()
 
@@ -49,16 +49,15 @@ class MongoDb():
             collection = db[param_collection]
         return collection
 
-    def insert(self):
-        # TODO: weiter ausbauen
+    def insert(self, data):
         self.collection.insert_one(
-            {"hallo":"Ballo3"}
+            data
         )
 
-###     Connection to LocalDB
-class LocalDb():
+###     Connection to a local storage
+class OptionLocalStorage():
     def __init__(self):
-        self.path = "./local/user_data.json"
+        self.path = "./local/user_records.json"
         self.startupCheck()
 
     def startupCheck(self):
@@ -66,11 +65,10 @@ class LocalDb():
         if os.access(self.path, os.R_OK):
             logging.info("  startupCheck: File exists")
         else:
-            #TODO: create a new document
             with open(self.path, "w") as file:
                 structure = []
                 json.dump(structure, file)
-            logging.warning("   startupCheck: user_data.json was created")
+            logging.warning("   startupCheck: user_records.json was created")
 
     def search_user(self, user_id, data):
         # returns matching dictionary
@@ -81,33 +79,39 @@ class LocalDb():
         user = data[0]
         record = data[1]
 
-        with open(self.path, "r+") as file:
-            json_file = json.load(file)
-            file.seek(0)
+        try: 
+            with open(self.path, "r+") as file:
+                json_file = json.load(file)
+                file.seek(0)
 
-            # search for
-            element = self.search_user(user["id"], json_file)
+                # search for user
+                element = self.search_user(user["id"], json_file)
 
-            # add new user
-            if element == []:
-                # add record to user element
-                user["records"] = [record]
                 # add new user
-                json_file.append(user)
-            # add new record entry 
-            else: 
-                element[0]["records"].append(record)
+                if element == []:
+                    # add record to user element
+                    user["records"] = [record]
+                    # add new user
+                    json_file.append(user)
+                # add new record entry 
+                else: 
+                    element[0]["records"].append(record)
 
-            file.truncate()
-            json.dump(json_file, file)
-            print(" Info: New entry was added to user_data.json")
+                file.truncate()
+                json.dump(json_file, file)
+            print(" Info: New entry was added to user_records.json") 
+        except RuntimeError:
+            print("     Error: \n Could not add entry.")
 
 ###     Create Entries
 #FIXME: Refactoring add Entry class 
 class Operations():
     def __init__(self):
         self.mongo_storage = self.storage_config()
-    
+        self.current_user =  self.get_user()
+        self.mappings = self.get_mapping()
+        self.option = self.get_app_options()
+
     # check if mongoDB or local storage should be user
     def storage_config(self):
         with open("./mongo/configurations.json") as file:
@@ -117,59 +121,43 @@ class Operations():
     
     def get_use_mongo_status(self):
         return self.mongo_storage
+
+    # check for current user
+    def get_user(self):
+        with open("./config/user_identity.json") as file:
+            current_user = json.load(file)
+        return current_user
+
+    def set_user(self, data):
+        with open("./config/user_identity.json", "w") as file:
+            json.dump(data, file)
+
+    def get_mapping(self):
+        with open("./config/mappings.json") as file:
+            mapping = json.load(file)
+        return mapping
+
+    def get_app_options(self):
+        with open("./config/options.json") as file:
+            options = json.load(file)
+        return options
+
+    ################ Adding Entries
         
-    def input_console(self):
-        print("##################################\n")
-        print("Allright, i need some information\n")
-        print("Please tell the grade:\n") 
-        print("TODO: FROM 0 TILL 21")
-
-        input_grade = int(input())
-        print("\nPlease tell me the type\n")
-        print("(0) flash, (1) on-sight, (2) rotpunkt or (3) an unsuccesful try")
-        input_type = int(input())
-        
-        ### local entry
-
-        entry_data = self.add_entry(input_grade, input_type)
-
-        print(entry_data)
-
-    def input_script(self):
+    def add_entry_mongo(self, record_input):
+        # FIXME: Find a proper data model for mongodb
+        # record = record_input
+        # user = self.current_user
+        # entry = {
+        #     [user, record]
+        # }
+        # OptionMongoDb().insert(entry)
         pass
 
-    def form_entry(self, data):
-        # information about user: currently static => TODO
-        user = {
-            "id" : "14785239",
-            "surname" : "Bruchhagen",
-            "forename" : "Heribert"
-        }
-        ## entry information
-        record = {
-            "timetamp" : data[0],
-            "scale" : data[1],
-            "grade" : data[2],
-            "completion_type" : data[3],   
-        }
-
-        return [user, record]
-
-    def add_entry(self, input_grade, input_type):
-
-        grade = Grades().set_route_grade(input_grade)
-        completion_type = CompletionType().set_completion_type(input_type)
-        timestamp = datetime.datetime.now().timestamp()
-        scale = Grades().get_standard()
-        
-        record = [timestamp, scale, grade, completion_type]
-
-        data = self.form_entry(record)
-
-        # add to local record
-        #FIXME => there is still a local entry which will be added. it should be neutral
-            #local_record.Entries().add_entry(data)
-        return data
+    def add_entry_local(self, record_input):
+        record = record_input
+        user = self.current_user
+        OptionLocalStorage().add_entry([user, record])
 
 
 ###     Boulder Grades
@@ -177,147 +165,84 @@ class Grades():
     def __init__(self):
         # mapping based on this =>
             # https://www.bergzeit.de/magazin/bouldern-schwierigkeitsgrade-tabelle-umrechnung/
-        self.grade_mapping = {
-            "name" : ["fb-bloc", "fb-trav", "v-scale"],
-            "grade": [
-                [
-                    "4",
-                    "4",
-                    "V0"
-                ],
-                [
-                    "5",
-                    "5",
-                    "V1"
-                ],
-                [
-                    "5+",
-                    "6a",
-                    "V2"
-                ],
-                [
-                    "6a",
-                    "6a+",
-                    "V3"
-                ],
-                [
-                    "6a+",
-                    "6b",
-                    "V4"
-                ],
-                [
-                    "6b",
-                    "6b+",
-                    "V4"
-                ],
-                [
-                    "6b+",
-                    "6c",
-                    "V5"
-                ],
-                [
-                    "6c",
-                    "6c+",
-                    "V5"
-                ],
-                [
-                    "6c+",
-                    "7a",
-                    "V6"
-                ],
-                [
-                    "7a",
-                    "7a+",
-                    "V6"
-                ],
-                [
-                    "7a+",
-                    "7b",
-                    "V7"
-                ],
-                [
-                    "7b",
-                    "7b+",
-                    "V8"
-                ],
-                [
-                    "7b+",
-                    "7c",
-                    "V9"
-                ],
-                [
-                    "7c",
-                    "7c+",
-                    "V9"
-                ],
-                [
-                    "7c+",
-                    "8a",
-                    "V10"
-                ],
-                [
-                    "8a",
-                    "8a+",
-                    "V11"
-                ],
-                [
-                    "8a+",
-                    "8b",
-                    "V12"
-                ],
-                [
-                    "8b",
-                    "8b+",
-                    "V13"
-                ],
-                [
-                    "8b+",
-                    "8c",
-                    "V14"
-                ],
-                [
-                    "8c",
-                    "8c+",
-                    "V15"
-                ],
-                [
-                    "8c+",
-                    "9a",
-                    "V16"
-                ],
-                [
-                    "9a",
-                    "> 9a",
-                    "V17"
-                ]
-            ]
-        }
-        self.standard_grade = 00 # sets standard to "fb-bloc"
+        self.scale_mapping = self.get_mapping()
 
-    def get_standard(self):
-        return self.standard_grade
+    def get_mapping(self):
+        return Operations().get_mapping()["scale_type"]
 
-    def print_standard(self):
-        return self.grade_mapping["name"][self.get_standard()]
-
-    def change_grade_system(self): 
-        # TODO
+    def set_scale_standard(self):
+        # TODO => calls up local/options and changes this variable
+        # expects an integer from 0 till 2
         pass
 
+    def convert_grade(self, input_grade, scale_type):
+        #TODO
+        pass
+
+    #TODO OBSOLETE IN FUTURE?
     def set_route_grade(self, index):
-        scale = self.get_standard()
-        current_grade = self.grade_mapping["grade"][index][scale]
+        scale = Operations().get_app_options()["standard_scale"]
+        current_grade = self.scale_mapping["grade"][index][scale]
         return current_grade
 
 ###     Boulder Completion Types
 class CompletionType():
     def __init__(self):
-        self.type = {
-            0: "flash",
-            1: "on-sight",
-            2: "rotpunkt",
-            3: "try"
-        }
-    
+        self.type = self.get_mapping()
+
+    def get_mapping(self):
+        return Operations().get_mapping()["completion_type"]
+
     def set_completion_type(self, index):
         return self.type[index]
+
+
+class ConsoleInput():
+    pass
+    # def console(self):
+    #     print("##################################\n")
+    #     print("Allright, i need some information\n")
+    #     print("Please tell the grade:\n") 
+    #     print("TODO: FROM 0 TILL 21")
+
+    #     input_grade = int(input())
+    #     print("\nPlease tell me the type\n")
+    #     print("(0) flash, (1) on-sight, (2) rotpunkt or (3) an unsuccesful try")
+    #     input_type = int(input())
+        
+    #     ### local entry
+
+    #     # entry_data = self.add_entry(input_grade, input_type)
+
+    #     print(entry_data)
+
+    # def form_entry(self, data):
+    #     # information about user: currently static => TODO
+       
+    #     ## entry information
+    #     record = {
+    #         "timetamp" : data[0],
+    #         "scale" : data[1],
+    #         "grade" : data[2],
+    #         "completion_type" : data[3],   
+    #     }
+
+    #     return [user, record]
+
+    # def form_record(self, input_grade, input_type):
+        
+    #     # TODO: user data has to be added as well?!
+
+    #     grade = Grades().set_route_grade(input_grade)
+    #     completion_type = CompletionType().set_completion_type(input_type)
+    #     timestamp = datetime.datetime.now().timestamp()
+    #     scale = Grades().get_standard()
+        
+    #     record = [timestamp, scale, grade, completion_type]
+
+    #     data = self.form_entry(record)
+
+    #     # add to local record
+    #     #FIXME => there is still a local entry which will be added. it should be neutral
+    #         #local_record.Entries().add_entry(data)
+    #     return data
