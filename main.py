@@ -142,11 +142,18 @@ class Operations():
             options = json.load(file)
         return options
 
+    def set_app_options(self):
+        # TODO
+        pass
+        
+
     ################ Adding Entries
         
     def add_entry_mongo(self, record_input):
         # FIXME: Find a proper data model for mongodb
-        # record = record_input
+        # maybe going for referncing instead of embedded?
+        #https://www.youtube.com/watch?v=4rhKKFbbYT4
+        #  record = record_input
         # user = self.current_user
         # entry = {
         #     [user, record]
@@ -166,6 +173,8 @@ class Grades():
         # mapping based on this =>
             # https://www.bergzeit.de/magazin/bouldern-schwierigkeitsgrade-tabelle-umrechnung/
         self.scale_mapping = self.get_mapping()
+        self.scale_type = self.scale_mapping["name"]
+        self.grades = self.scale_mapping["grade"]
 
     def get_mapping(self):
         return Operations().get_mapping()["scale_type"]
@@ -173,10 +182,11 @@ class Grades():
     def set_scale_standard(self):
         # TODO => calls up local/options and changes this variable
         # expects an integer from 0 till 2
+        
         pass
 
-    def convert_grade(self, input_grade, scale_type):
-        #TODO
+    def convert_grade(self, input_grade, output_scale):
+        #TODO Scale type is from __init__
         pass
 
     #TODO OBSOLETE IN FUTURE?
