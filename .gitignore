@@ -3,3 +3,4 @@ mongo/connection_instruction.txt
 mongo/credentials.json
 mongo/credentials_example.json
 mongo/configurations.json
+__pycache__/
