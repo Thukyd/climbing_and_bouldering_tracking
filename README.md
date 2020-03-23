@@ -7,7 +7,7 @@ Keep track of your boulder routes.
 - choice between storage in local json or cloud mongodb
 
 
-## Tasks - version 0.1:
+## Tasks (version 0.1):
 - [x] grade & completion type mappings
 - [x] local storage
 - [x] connection to mongo
