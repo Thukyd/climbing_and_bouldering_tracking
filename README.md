@@ -10,6 +10,7 @@ Keep track of your boulder routes
 - [x] connection to mongo
 - [x] option a: input via script with mongodb 
 - [x] option b: input via script with local storage
+- [ ] set new standard scale type & convert scale types => currently on hold
 - [ ] => update documentation in Github
 - [ ] => app/web/chatbot intgration?
 
