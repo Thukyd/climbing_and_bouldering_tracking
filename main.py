@@ -1,19 +1,3 @@
-#### Verson 0.1 
-# - backend logic only - no database & gui
-# - only bouldering
-# 1. track route
-#   a) set Rotpunkt /On Sight / Flash / try without success
-#        https://de.wikipedia.org/wiki/Begehungsstil#Gebr%C3%A4uchliche_Begehungsstile
-#   b) set grade in current measurment and convert to standard measurement
-#       https://en.wikipedia.org/wiki/Grade_(climbing)
-#       https://www.mountainproject.com/international-climbing-grades
-# 2. see all results
-# a) todays result
-# b) former days results
-
-
-##############################
-
 import datetime
 import time
 import logging
@@ -32,6 +16,7 @@ import logging
 # TODO: https://www.youtube.com/watch?v=rE_bJl2GAY8
 # TODO: https://account.mongodb.com/account/login
 ###     Connection to MongoDB
+### Design: https://www.mongodb.com/blog/post/building-with-patterns-a-summary?utm_campaign=Int_EM_ONB_FT1a_10_19_WW&utm_source=Eloqua&utm_medium=email&utm_term=Designing%20a%20MongoDB%20schema%20for%20Atlas
 class OptionMongoDb():
     def __init__(self):
         self.collection = self.config()
@@ -54,6 +39,24 @@ class OptionMongoDb():
             data
         )
 
+    def add_record(self, user_id, record):
+        self.collection.update_one({
+            "_id" : user_id
+        },
+        {
+            "$push" : {"records": record}
+        })
+
+    def check_user_existance(self, user_id):
+        # returns "find" returns mongo object that needs => needs to be handled in loops
+        if self.collection.find({"_id" : user_id}).count() > 0: 
+            return True
+        else:
+            return False
+
+    def find_entry(self, user_id):
+        return self.collection.find({"_id": user_id})
+
 ###     Connection to a local storage
 class OptionLocalStorage():
     def __init__(self):
@@ -72,9 +75,9 @@ class OptionLocalStorage():
 
     def search_user(self, user_id, data):
         # returns matching dictionary
-        return [element for element in data if element['id'] == user_id]
+        return [element for element in data if element['_id'] == user_id]
     
-    def add_entry(self, data):
+    def insert(self, data):
 
         user = data[0]
         record = data[1]
@@ -85,7 +88,7 @@ class OptionLocalStorage():
                 file.seek(0)
 
                 # search for user
-                element = self.search_user(user["id"], json_file)
+                element = self.search_user(user["_id"], json_file)
 
                 # add new user
                 if element == []:
@@ -103,8 +106,6 @@ class OptionLocalStorage():
         except RuntimeError:
             print("     Error: \n Could not add entry.")
 
-###     Create Entries
-#FIXME: Refactoring add Entry class 
 class Operations():
     def __init__(self):
         self.mongo_storage = self.storage_config()
@@ -150,21 +151,31 @@ class Operations():
     ################ Adding Entries
         
     def add_entry_mongo(self, record_input):
-        # FIXME: Find a proper data model for mongodb
-        # maybe going for referncing instead of embedded?
-        #https://www.youtube.com/watch?v=4rhKKFbbYT4
-        #  record = record_input
-        # user = self.current_user
-        # entry = {
-        #     [user, record]
-        # }
-        # OptionMongoDb().insert(entry)
-        pass
+        record = record_input
+        user = self.current_user
+
+        # existing user? => add record
+        if OptionMongoDb().check_user_existance(user["_id"]): 
+            entry = record
+            OptionMongoDb().add_record(user["_id"], record)
+            # TEST BEGIN
+            user_id = user["_id"]
+            print(f"{user_id} existiert bereits. Neuer Record hinzugefügt")
+            # TEST END
+        # new user? => create user + record
+        else:
+            entry = user
+            entry["records"] = [record]
+            OptionMongoDb().insert(entry)
+            # TEST BEGIN
+            user_id = user["_id"]
+            print(f"Neue Nutzer mit der ID {user_id} angelegt")
+            # TEST END
 
     def add_entry_local(self, record_input):
         record = record_input
         user = self.current_user
-        OptionLocalStorage().add_entry([user, record])
+        OptionLocalStorage().insert([user, record])
 
 
 ###     Boulder Grades
@@ -182,7 +193,6 @@ class Grades():
     def set_scale_standard(self):
         # TODO => calls up local/options and changes this variable
         # expects an integer from 0 till 2
-        
         pass
 
     def convert_grade(self, input_grade, output_scale):
@@ -205,54 +215,3 @@ class CompletionType():
 
     def set_completion_type(self, index):
         return self.type[index]
-
-
-class ConsoleInput():
-    pass
-    # def console(self):
-    #     print("##################################\n")
-    #     print("Allright, i need some information\n")
-    #     print("Please tell the grade:\n") 
-    #     print("TODO: FROM 0 TILL 21")
-
-    #     input_grade = int(input())
-    #     print("\nPlease tell me the type\n")
-    #     print("(0) flash, (1) on-sight, (2) rotpunkt or (3) an unsuccesful try")
-    #     input_type = int(input())
-        
-    #     ### local entry
-
-    #     # entry_data = self.add_entry(input_grade, input_type)
-
-    #     print(entry_data)
-
-    # def form_entry(self, data):
-    #     # information about user: currently static => TODO
-       
-    #     ## entry information
-    #     record = {
-    #         "timetamp" : data[0],
-    #         "scale" : data[1],
-    #         "grade" : data[2],
-    #         "completion_type" : data[3],   
-    #     }
-
-    #     return [user, record]
-
-    # def form_record(self, input_grade, input_type):
-        
-    #     # TODO: user data has to be added as well?!
-
-    #     grade = Grades().set_route_grade(input_grade)
-    #     completion_type = CompletionType().set_completion_type(input_type)
-    #     timestamp = datetime.datetime.now().timestamp()
-    #     scale = Grades().get_standard()
-        
-    #     record = [timestamp, scale, grade, completion_type]
-
-    #     data = self.form_entry(record)
-
-    #     # add to local record
-    #     #FIXME => there is still a local entry which will be added. it should be neutral
-    #         #local_record.Entries().add_entry(data)
-    #     return data
