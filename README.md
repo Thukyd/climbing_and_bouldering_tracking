@@ -36,8 +36,23 @@ TDB
 
 
 ## Set Standard Scale Type
-TDB
-
+The scale type is defined in the config/options.json. Standard is "Fontainebleau-bloc".
+```python
+{
+    "standard_scale" : "0"
+}
+```
+It references to the array in config/mappings.json
+```python
+...
+  "scale_type": {
+        "name": [
+            "fb-bloc",
+            "fb-trav",
+            "v-scale"
+        ],
+ ...
+```
 
 ## Change Current User
 TDB
