@@ -55,4 +55,7 @@ It references to the array in config/mappings.json.
 ```
 
 ## Change Current User
-TDB
+The current user can be configured in config/user_identity.json
+```
+{"_id": "987654321", "surname": "Doe", "forename": "Jane"}
+```
