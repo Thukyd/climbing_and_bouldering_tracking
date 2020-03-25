@@ -52,7 +52,7 @@ test_record_b = {
 
 ############### B) Operations Status #############
 
-# print("\n")
+# print("\nGet all Mappings")
 # mapping = main.Operations().get_mapping()
 # print(f"Check the mapping =>\n {mapping}")
 # print("Completion Type")
@@ -64,13 +64,12 @@ test_record_b = {
 ############### B) Operations Status #############
 
 
-
 ############### C) Script Local RECORD ##############
 
 # print(main.Operations().get_user())
-# main.Operations().set_user(test_user_d)
+# main.Operations().set_user(test_user_d) # set a user
 # print(main.Operations().get_user())
-# main.Operations().add_entry_local(test_record_b)
+# main.Operations().add_entry_local(test_record_b) # add the user to local
 # print("\n")
 
 ############### C) Script Local RECORD ##############
@@ -79,25 +78,20 @@ test_record_b = {
 
 ############### D) Script MongoDB RECORD ##############WW
 
-
-
-# TODO 1 check user_existance / Mongo Search (true/false)
-# https://stackoverflow.com/questions/25163658/mongodb-return-true-if-document-exists
-
-# shoudl return true or false
+# # check if user exists in mongodb
 # does_user_exist = main.OptionMongoDb().check_user_existance(test_user_a["_id"])
-# print(f"existiert der Nuter bereits? {does_user_exist}")
+# print(f"Does the current user exists already in MOngoDB? => {does_user_exist}")
 
 
-# TODO 2 add_entry_monogo (Neuen Nutzer anlegen und zu altem Nutzer hinzufügen
+# # add entry to mongodb
 # main.Operations().add_entry_mongo(test_record_a)
+# print(main.Operations().get_user())
 
-print(main.Operations().get_user())
-# set my user
-main.Operations().set_user(test_user_b)
-print(main.Operations().get_user())
-# add new entry
-main.Operations().add_entry_mongo(test_record_a)
-print("\n")
+# # set my user
+# main.Operations().set_user(test_user_c)
+# print(main.Operations().get_user())
+# # add new entry
+# main.Operations().add_entry_mongo(test_record_a)
+# print("\n")
 
 ############### D) Script MongoDB RECORD ##############

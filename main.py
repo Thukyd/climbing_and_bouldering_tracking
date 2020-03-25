@@ -118,17 +118,16 @@ class OptionLocalStorage():
 # Basic Operations
 class Operations():
     def __init__(self):
-        self.mongo_storage = self.storage_config()
+        self.mongo_storage = self.get_app_options()["mongo_db_activated"]
+        self.option = self.get_app_options()["standard_scale"]
         self.current_user =  self.get_user()
         self.mappings = self.get_mapping()
-        self.option = self.get_app_options()
 
-    # checks if mongoDB or local storage should be used
-    def storage_config(self):
-        with open("./mongo/configurations.json") as file:
-            parsed = json.load(file)
-            mongo_db_status = parsed["activated"]
-        return mongo_db_status
+     # return which scale type is used currently
+    def get_app_options(self):
+        with open("./config/options.json") as file:
+            options = json.load(file)
+        return options
     
     # checks if mongoDB is activated in options; otherwise the local storage is active
     def get_use_mongo_status(self):
@@ -150,12 +149,6 @@ class Operations():
         with open("./config/mappings.json") as file:
             mapping = json.load(file)
         return mapping
-
-    # return which scale type is used currently
-    def get_app_options(self):
-        with open("./config/options.json") as file:
-            options = json.load(file)
-        return options
 
     # adds an entry in mongoDB    
     def add_entry_mongo(self, record_input):
