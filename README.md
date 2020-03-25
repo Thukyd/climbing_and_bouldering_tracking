@@ -18,7 +18,7 @@ Keep track of your boulder routes.
 - [x] => update documentation in Github
 
 ## Tasks (version 0.2):
-- [ ] simple GUI via Svelt
+- [ ] simple Svelte GUI
 
 # Next steps for version 0.3?
 - [ ] add operations: update / delete records; update / delete user information; set new user?
