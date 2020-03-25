@@ -27,7 +27,7 @@ Keep track of your boulder routes.
 # How to configure version 0.1?
 
 
-## Setup Storage (MongoDB or Local)
+## Choose Storage - MongoDB or Local Folder
 TDB
 
 
@@ -59,3 +59,6 @@ The current user can be configured in config/user_identity.json
 ```
 {"_id": "987654321", "surname": "Doe", "forename": "Jane"}
 ```
+
+## Test scripts
+Uncomment parts of "test_scripts.py" and let it run. 
