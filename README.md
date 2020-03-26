@@ -17,10 +17,7 @@ Keep track of your boulder routes.
 - [x] full test via script
 - [x] => update documentation in Github
 
-## Tasks (version 0.2):
-- [ ] simple Svelte GUI
-
-# Next steps for version 0.3?
+# Next steps for version 0.2?
 - [ ] add operations: update / delete records; update / delete user information; set new user?
 - [ ] online/offline sync?
 - [ ] web(pwa) integration? chatbot/voicebot integration?
